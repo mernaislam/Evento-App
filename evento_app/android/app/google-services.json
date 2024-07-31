@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "170137595379",
+    "firebase_url": "https://evento-linkdev-default-rtdb.firebaseio.com",
+    "project_id": "evento-linkdev",
+    "storage_bucket": "evento-linkdev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170137595379:android:58ba56e93141e1d6b23686",
+        "android_client_info": {
+          "package_name": "com.example.evento_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJogg406igo09620LBp4gVvSt2ijlv410"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
