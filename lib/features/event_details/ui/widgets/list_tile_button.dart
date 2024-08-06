@@ -9,7 +9,8 @@ class ListTileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.only(left: 70),
       child: ElevatedButton.icon(
         onPressed: () {},
         style: ElevatedButton.styleFrom(

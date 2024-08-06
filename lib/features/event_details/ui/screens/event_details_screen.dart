@@ -7,9 +7,11 @@ import 'package:evento_app/features/event_details/ui/widgets/image_slider.dart';
 import 'package:evento_app/features/event_details/ui/widgets/initial_event_details.dart';
 import 'package:evento_app/features/event_details/ui/widgets/organizer_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({super.key});
+  // we are going to pass a event object here
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class EventDetailsScreen extends StatelessWidget {
             const ImageSlider(),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

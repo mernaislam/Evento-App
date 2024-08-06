@@ -13,28 +13,31 @@ class CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundColor: Theme.of(context).secondaryHeaderColor,
-        radius: 30,
-        child: Icon(
-          Icons.calendar_month_rounded,
-          color: Theme.of(context).primaryColor,
+    return MediaQuery(
+      data: const MediaQueryData(padding: EdgeInsets.zero),
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: CircleAvatar(
+          backgroundColor: Theme.of(context).secondaryHeaderColor,
+          radius: 30,
+          child: Icon(
+            Icons.calendar_month_rounded,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
-      ),
-      title: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 10,
+        title: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge,
+        subtitle: Text(
+          subTitle,
+          style: Theme.of(context).textTheme.titleSmall,
         ),
-      ),
-      subtitle: Text(
-        subTitle,
-        style: Theme.of(context).textTheme.titleSmall,
       ),
     );
   }
