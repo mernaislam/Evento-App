@@ -26,7 +26,6 @@ class InitialEventDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // -------- Add Event Date here --------
         CustomListTile(
           icon: Icons.calendar_month_rounded,
           title: date,
@@ -41,7 +40,6 @@ class InitialEventDetails extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        // -------- Add Event Location here --------
         CustomListTile(
           icon: Icons.place,
           title: '$city, $country',
@@ -56,7 +54,6 @@ class InitialEventDetails extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        // -------- Add Event Price here --------
         CustomListTile(
           icon: Icons.confirmation_num,
           title: '\$${minPrice.toString()} - \$${maxPrice.toString()}',

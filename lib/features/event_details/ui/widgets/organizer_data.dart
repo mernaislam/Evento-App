@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class EventOrganizerData extends StatelessWidget {
   const EventOrganizerData({super.key});
 
+  // TODO: Recieve organizer argument and replace static data
   @override
   Widget build(BuildContext context) {
     return MediaQuery(

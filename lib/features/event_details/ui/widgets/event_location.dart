@@ -9,6 +9,6 @@ class EventLocation extends StatelessWidget {
       'Location',
       style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 25),
     );
-    // Location to be implemented;
+    // TODO: Implement MapView API
   }
 }

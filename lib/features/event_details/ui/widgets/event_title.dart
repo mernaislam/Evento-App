@@ -16,7 +16,6 @@ class EventTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // -------- Add Event Title here --------
         Text(
           title,
           style: Theme.of(context).textTheme.headlineLarge,
@@ -37,7 +36,6 @@ class EventTitle extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
-              // -------- Add Event Category name here --------
               child: Text(
                 categoryName,
                 style: Theme.of(context).textTheme.bodySmall,
@@ -46,7 +44,7 @@ class EventTitle extends StatelessWidget {
             const SizedBox(
               width: 17,
             ),
-            // -------- TODO --------
+            // TODO: Edit going list based on model data
             Text(
               '20,000+ going',
               style: Theme.of(context).textTheme.bodyLarge,

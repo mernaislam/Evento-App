@@ -11,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({super.key});
-  // we are going to pass a event object here
+  // TODO: Pass event object in the arguments
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +29,14 @@ class EventDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ------- Add Event Title here, category and going -------
+                  // TODO: Add Event title, category and going list
                   const EventTitle(
                     title: 'National Music Festival',
                     categoryName: 'Music',
-                    going: ['merna', 'islam'], // modify to be list of users
+                    going: ['merna', 'islam'],
                   ),
                   const Divider(),
-                  // ------- Add Event Title here, category and going -------
+                  // TODO: Add Event date, time, price and location
                   const InitialEventDetails(
                     date: 'Monday, December 24, 2024',
                     time: '18.00 - 23.00 PM (GMT +07:00)',
@@ -48,7 +48,7 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  // ------- TODO: pass in the argument the oragnizer data -------
+                  // TODO: Pass in the argument the oragnizer data object
                   const EventOrganizerData(),
                   const SizedBox(height: 10),
                   Text(
@@ -61,7 +61,7 @@ class EventDetailsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  // ------- Add event description here --------
+                  // TODO: Add event description
                   const EventDescription(
                     description:
                         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut, Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut',
@@ -69,7 +69,7 @@ class EventDetailsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  // ------- TODO: Pass location arguments and implement maps API -------
+                  // TODO: Pass location arguments and implement mapview API
                   const EventLocation(),
                 ],
               ),
