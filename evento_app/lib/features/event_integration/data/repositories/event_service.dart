@@ -1,21 +1,30 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/event_model.dart';
 
 class EventService {
-  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+  final CollectionReference eventsCollection =
+      FirebaseFirestore.instance.collection('events');
+
+  Future<Event> fetchEvent(DocumentSnapshot doc) async {
+    return await Event.fromDocument(
+        doc); 
+  }
 
   Future<List<Event>> getEvents() async {
-    final snapshot = await _database.child('events').get();
-    if (snapshot.exists) {
-      final Map<dynamic, dynamic> eventMap =
-          snapshot.value as Map<dynamic, dynamic>;
-      final List<Event> events = [];
-      eventMap.forEach((key, value) {
-        final event = Event.fromJson(Map<String, dynamic>.from(value));
-        events.add(event);
+    try {
+      FirebaseFirestore.instance
+          .collection('events')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        // print(querySnapshot.docs.length);
       });
+      final querySnapshot = await eventsCollection.get();
+      List<DocumentSnapshot> documents = querySnapshot.docs;
+      final events = Future.wait(documents.map((doc) => fetchEvent(doc)));
+      // print('Events fetched: $events');
       return events;
-    } else {
+    } catch (e) {
+      // print('Error fetching events: $e');
       return [];
     }
   }
