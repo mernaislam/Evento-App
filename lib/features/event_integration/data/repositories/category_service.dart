@@ -7,12 +7,6 @@ class CategoryService {
 
   Future<List<Category>> getCategories() async {
     try {
-      FirebaseFirestore.instance
-          .collection('categories')
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        // print(querySnapshot.docs.length);
-      });
       final querySnapshot = await categoryCollection.get();
       final categories = querySnapshot.docs.map((doc) => Category.fromDocument(doc)).toList();
       // print('Categories fetched: $categories');

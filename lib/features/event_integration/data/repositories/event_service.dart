@@ -12,12 +12,6 @@ class EventService {
 
   Future<List<Event>> getEvents() async {
     try {
-      FirebaseFirestore.instance
-          .collection('events')
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        // print(querySnapshot.docs.length);
-      });
       final querySnapshot = await eventsCollection.get();
       List<DocumentSnapshot> documents = querySnapshot.docs;
       final events = Future.wait(documents.map((doc) => fetchEvent(doc)));
