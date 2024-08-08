@@ -1,7 +1,7 @@
+import 'package:evento_app/features/event_integration/data/repositories/category_providers.dart';
+import 'package:evento_app/features/event_integration/data/repositories/event_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:evento_app/features/event_integration/data/repositories/event_providers.dart';
-import 'package:evento_app/features/event_integration/data/repositories/category_providers.dart';
 
 class HomeScreenBody extends ConsumerWidget {
   const HomeScreenBody({super.key});
