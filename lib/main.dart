@@ -1,9 +1,13 @@
 import 'package:evento_app/core/themes/app_themes.dart';
 import 'package:evento_app/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  runApp(const EventoApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+   runApp(const ProviderScope(child: EventoApp()));
 }
 
 class EventoApp extends StatelessWidget {
