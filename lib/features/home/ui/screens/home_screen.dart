@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: const ImageIcon(
           AssetImage(
-            AppAssets.oliveLogo,
+            AppAssets.logo,
           ),
         ),
       ),

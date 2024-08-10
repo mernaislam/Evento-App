@@ -7,7 +7,7 @@ class CustomTextTheme {
     headlineLarge: GoogleFonts.urbanist(
       color: Colors.black,
       fontWeight: FontWeight.bold,
-      fontSize: 34,
+      fontSize: 38,
     ),
     headlineMedium: GoogleFonts.urbanist(
       color: Colors.black,
@@ -42,7 +42,7 @@ class CustomTextTheme {
     ),
     
     bodyMedium: GoogleFonts.urbanist(
-      color: Colors.white,
+      color: Colors.black,
       fontWeight: FontWeight.normal,
       fontSize: 16,
     ),
@@ -70,7 +70,7 @@ class CustomTextTheme {
     headlineLarge: GoogleFonts.urbanist(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 34,
+      fontSize: 38,
     ),
     headlineMedium: GoogleFonts.urbanist(
       color: Colors.white,
