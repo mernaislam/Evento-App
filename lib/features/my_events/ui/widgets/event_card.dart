@@ -49,7 +49,7 @@ class _EventCardState extends State<EventCard> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2 * widget.scale,
+                height: MediaQuery.of(context).size.height * 0.2 * (widget.scale - 0.25),
                 child: Stack(fit: StackFit.expand, children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -99,7 +99,7 @@ class _EventCardState extends State<EventCard> {
                       width: MediaQuery.of(context).size.width * 0.26 * widget.scale,
                       child: Text(
                         '$street, $city, $country', //change to event.address
-                        style: widget.scale == 1 ? Theme.of(context).textTheme.labelSmall : Theme.of(context).textTheme.labelMedium,
+                        style: widget.scale == 1 ? Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 12) : Theme.of(context).textTheme.titleSmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

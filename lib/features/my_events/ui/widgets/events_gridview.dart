@@ -17,7 +17,6 @@ class EventsGridView extends StatelessWidget {
           crossAxisCount: 2,
           childAspectRatio: 0.7,
         ),
-        // physics: const NeverScrollableScrollPhysics(),
         itemCount: 10, //change to events.length
         itemBuilder: (context, index) {
           return const EventCard(
