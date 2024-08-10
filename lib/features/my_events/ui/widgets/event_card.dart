@@ -40,8 +40,10 @@ class _EventCardState extends State<EventCard> {
         },
         child: Container(
           padding: const EdgeInsets.all(8),
-          width: MediaQuery.of(context).size.width * 0.45 * (widget.scale + 0.2),
-          height: MediaQuery.of(context).size.height * 0.35 * (widget.scale - 0.25) ,
+          width:
+              MediaQuery.of(context).size.width * 0.45 * (widget.scale + 0.2),
+          height:
+              MediaQuery.of(context).size.height * 0.35 * (widget.scale - 0.25),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -49,7 +51,11 @@ class _EventCardState extends State<EventCard> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2 * (widget.scale - 0.25),
+                height: widget.scale == 1
+                    ? MediaQuery.of(context).size.height * 0.2
+                    : MediaQuery.of(context).size.height *
+                        0.2 *
+                        (widget.scale - 0.25),
                 child: Stack(fit: StackFit.expand, children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -77,14 +83,21 @@ class _EventCardState extends State<EventCard> {
                 children: [
                   Text(
                     title, //change to event.title
-                    style: widget.scale == 1 ? Theme.of(context).textTheme.headlineSmall: Theme.of(context).textTheme.headlineMedium,
+                    style: widget.scale == 1
+                        ? Theme.of(context).textTheme.headlineSmall
+                        : Theme.of(context).textTheme.headlineMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(),
                   Text(
                     date, //change to event.date
-                    style: widget.scale == 1 ? Theme.of(context).textTheme.bodySmall: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 16),
+                    style: widget.scale == 1
+                        ? Theme.of(context).textTheme.bodySmall
+                        : Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(fontSize: 16),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -96,10 +109,17 @@ class _EventCardState extends State<EventCard> {
                     ),
                     const SizedBox(),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.26 * widget.scale,
+                      width: MediaQuery.of(context).size.width *
+                          0.26 *
+                          widget.scale,
                       child: Text(
                         '$street, $city, $country', //change to event.address
-                        style: widget.scale == 1 ? Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 12) : Theme.of(context).textTheme.titleSmall,
+                        style: widget.scale == 1
+                            ? Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(fontSize: 12)
+                            : Theme.of(context).textTheme.titleSmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
