@@ -26,4 +26,31 @@ class AppAuth {
     }
     return error;
   }
+
+
+  static Future<String> userSignIn(String email, String password) async {
+    String msg;
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      msg = 'Success';
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'wrong-password':
+          msg = 'Wrong password';
+          break;
+        case 'invalid-email':
+          msg = 'Email is invalid';
+          break;
+        case 'user-not-found':
+          msg = 'This email does not exist';
+          break;
+        default:
+          msg = e.code;
+      }
+    }
+    return msg;
+  }
 }

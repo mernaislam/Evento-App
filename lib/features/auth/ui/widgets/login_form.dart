@@ -1,4 +1,6 @@
+import 'package:evento_app/core/helpers/app_auth.dart';
 import 'package:evento_app/core/helpers/form_rules.dart';
+import 'package:evento_app/core/helpers/functions.dart';
 import 'package:evento_app/features/auth/ui/widgets/custom_text_form_field.dart';
 import 'package:evento_app/features/auth/ui/widgets/form_button.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +14,28 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool _obscureText = true;
+  bool _isloading = false;
   IconData _passwordIcon = Icons.visibility_off;
   final GlobalKey<FormState> _formKey = GlobalKey();
-  late String email;
-  late String password;
+  late String _email;
+  late String _password;
 
-  void _signin() {
-    if (!_formKey.currentState!.validate()) {
+  void _signin(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isloading = true;
+      });
       _formKey.currentState!.save();
+      String msg = await AppAuth.userSignIn(_email, _password);
+      if (msg != 'Success' && context.mounted) {
+        showSnackBar(msg, context);
+      } else {
+        // TODO: push home screen
+      }
     }
+    setState(() {
+      _isloading = false;
+    });
   }
 
   @override
@@ -36,7 +51,7 @@ class _LoginFormState extends State<LoginForm> {
               return FormRules.emailValidator(val);
             },
             onSaved: (val) {
-              email = val!;
+              _email = val!;
             },
           ),
           CustomTextFormField(
@@ -57,13 +72,15 @@ class _LoginFormState extends State<LoginForm> {
               return FormRules.passwordValidator(val);
             },
             onSaved: (val) {
-              password = val!;
+              _password = val!;
             },
           ),
           FormButton(
-            onPressed: _signin,
+            onPressed: () {
+              _signin(context);
+            },
             text: 'Sign In',
-            isLoading: false,
+            isLoading: _isloading,
           ),
           const SizedBox(
             height: 10,

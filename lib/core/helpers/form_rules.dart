@@ -16,7 +16,7 @@ class FormRules {
       return 'Password is required';
     }
     if(!AppRegex.isPasswordValid(password)){
-      return 'Invalid email address';
+      return 'Invalid password';
     }
     return null;
   }
