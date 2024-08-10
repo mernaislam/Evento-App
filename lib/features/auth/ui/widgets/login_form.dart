@@ -3,6 +3,7 @@ import 'package:evento_app/core/helpers/form_rules.dart';
 import 'package:evento_app/core/helpers/functions.dart';
 import 'package:evento_app/features/auth/ui/widgets/custom_text_form_field.dart';
 import 'package:evento_app/features/auth/ui/widgets/form_button.dart';
+import 'package:evento_app/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -29,8 +30,14 @@ class _LoginFormState extends State<LoginForm> {
       String msg = await AppAuth.userSignIn(_email, _password);
       if (msg != 'Success' && context.mounted) {
         showSnackBar(msg, context);
-      } else {
+      } else if (context.mounted) {
         // TODO: push home screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
       }
     }
     setState(() {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento_app/features/auth/data/model/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseManager
@@ -9,7 +10,7 @@ class FirebaseManager
   static Future<bool> postUserToFirestore(String fullName, String email, String imageUrl) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc();
     final user = Account(
-      id: docUser.id,
+      id: FirebaseAuth.instance.currentUser!.uid,
       fullName: fullName,
       email: email,
       profileImage: imageUrl,

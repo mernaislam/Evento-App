@@ -7,6 +7,7 @@ import 'package:evento_app/core/helpers/functions.dart';
 import 'package:evento_app/features/auth/logic/image_provider.dart';
 import 'package:evento_app/features/auth/ui/widgets/custom_text_form_field.dart';
 import 'package:evento_app/features/auth/ui/widgets/form_button.dart';
+import 'package:evento_app/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,7 +30,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
   File? _imageFile;
   String? emailInUse;
 
-  void _signup() async {
+  void _signup(BuildContext context) async {
     setState(() {
       _isloading = true;
     });
@@ -61,6 +62,14 @@ class _SignupFormState extends ConsumerState<SignupForm> {
       setState(() {
         _isloading = false;
       });
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      }
     }
   }
 
@@ -113,7 +122,9 @@ class _SignupFormState extends ConsumerState<SignupForm> {
             },
           ),
           FormButton(
-            onPressed: _signup,
+            onPressed: (){
+              _signup(context);
+            },
             text: 'Sign Up',
             isLoading: _isloading,
           ),
