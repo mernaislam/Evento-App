@@ -16,11 +16,14 @@ class _MyEventsAppBarState extends State<MyEventsAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        'My Events',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
       backgroundColor: Theme.of(context).cardColor,
+      leading: IconButton(
+        onPressed: () {
+          // navigate to home screen
+        },
+        icon: Icon(Icons.arrow_back,
+            size: 33, color: Theme.of(context).textTheme.bodyLarge!.color),
+      ),
       actions: [
         IconButton(
             onPressed: () {
