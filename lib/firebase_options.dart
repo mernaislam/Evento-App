@@ -17,24 +17,15 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -59,6 +50,37 @@ class DefaultFirebaseOptions {
     projectId: 'evento-linkdev',
     databaseURL: 'https://evento-linkdev-default-rtdb.firebaseio.com',
     storageBucket: 'evento-linkdev.appspot.com',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBbQVVkmig1QL3sDmMLsGgeKDLY2hau_0M',
+    appId: '1:170137595379:web:457297f7e0478579b23686',
+    messagingSenderId: '170137595379',
+    projectId: 'evento-linkdev',
+    authDomain: 'evento-linkdev.firebaseapp.com',
+    databaseURL: 'https://evento-linkdev-default-rtdb.firebaseio.com',
+    storageBucket: 'evento-linkdev.appspot.com',
+    measurementId: 'G-2Y2N56E203',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyA-T2uvRixjhFb-kyZqrw3qQqjvNc00BFc',
+    appId: '1:170137595379:ios:139ee4680eb511dcb23686',
+    messagingSenderId: '170137595379',
+    projectId: 'evento-linkdev',
+    databaseURL: 'https://evento-linkdev-default-rtdb.firebaseio.com',
+    storageBucket: 'evento-linkdev.appspot.com',
+    iosBundleId: 'com.example.eventoApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyA-T2uvRixjhFb-kyZqrw3qQqjvNc00BFc',
+    appId: '1:170137595379:ios:139ee4680eb511dcb23686',
+    messagingSenderId: '170137595379',
+    projectId: 'evento-linkdev',
+    databaseURL: 'https://evento-linkdev-default-rtdb.firebaseio.com',
+    storageBucket: 'evento-linkdev.appspot.com',
+    iosBundleId: 'com.example.eventoApp',
   );
 
 }
