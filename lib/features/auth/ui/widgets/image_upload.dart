@@ -1,16 +1,18 @@
 import 'dart:io';
 
+import 'package:evento_app/features/auth/logic/image_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImageUpload extends StatefulWidget {
+class ImageUpload extends ConsumerStatefulWidget {
   const ImageUpload({super.key});
 
   @override
-  State<ImageUpload> createState() => _ImageUploadState();
+  ConsumerState<ImageUpload> createState() => _ImageUploadState();
 }
 
-class _ImageUploadState extends State<ImageUpload> {
+class _ImageUploadState extends ConsumerState<ImageUpload> {
   final ImagePicker _imagePicker = ImagePicker();
   File? _pickedImage;
 
@@ -18,9 +20,13 @@ class _ImageUploadState extends State<ImageUpload> {
     final image = await _imagePicker.pickImage(
       source: ImageSource.gallery,
     );
-    setState(() {
-      _pickedImage = image != null ? File(image.path) : _pickedImage;
-    });
+    if (image != null) {
+      setState(() {
+        var imagePath = image.path;
+        _pickedImage = File(imagePath);
+        ref.read(imageProvider.notifier).setImage(_pickedImage!);
+      });
+    }
   }
 
   @override
