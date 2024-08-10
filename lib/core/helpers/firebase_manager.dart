@@ -8,9 +8,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 class FirebaseManager
 {
   static Future<bool> postUserToFirestore(String fullName, String email, String imageUrl) async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc();
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    final docUser = FirebaseFirestore.instance.collection('users').doc(id);
     final user = Account(
-      id: FirebaseAuth.instance.currentUser!.uid,
+      id: id,
       fullName: fullName,
       email: email,
       profileImage: imageUrl,
