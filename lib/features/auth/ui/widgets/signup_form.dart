@@ -19,6 +19,7 @@ class SignupForm extends ConsumerStatefulWidget {
 
 class _SignupFormState extends ConsumerState<SignupForm> {
   bool _obscureText = true;
+  bool _isloading = false;
   IconData _passwordIcon = Icons.visibility_off;
   final GlobalKey<FormState> _formKey = GlobalKey();
   late String _fullName;
@@ -29,26 +30,37 @@ class _SignupFormState extends ConsumerState<SignupForm> {
   String? emailInUse;
 
   void _signup() async {
+    setState(() {
+      _isloading = true;
+    });
     _imageFile = ref.read(imageProvider);
     if (_imageFile == null) {
       showSnackBar('You must upload an image first', context);
+      setState(() {
+        _isloading = false;
+      });
       return;
     }
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       String error = await AppAuth.registerUser(_email, _password);
-      if (error != '') { // indicates that an error is catched
+      if (error != '') {
+        // indicates that an error is catched
         setState(() {
           emailInUse = error;
           _formKey.currentState!.validate();
+          _isloading = false;
         });
         setState(() {
           emailInUse = null;
         });
         return;
       }
-      await FirebaseManager.uploadImageToFirebase(_imageUrl, _imageFile);
-      FirebaseManager.postUserToFirestore(_fullName, _email, _imageUrl);
+      _imageUrl = await FirebaseManager.uploadImageToFirebase(_imageFile);
+      await FirebaseManager.postUserToFirestore(_fullName, _email, _imageUrl);
+      setState(() {
+        _isloading = false;
+      });
     }
   }
 
@@ -100,7 +112,11 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               _password = val!;
             },
           ),
-          FormButton(onPressed: _signup, text: 'Sign Up'),
+          FormButton(
+            onPressed: _signup,
+            text: 'Sign Up',
+            isLoading: _isloading,
+          ),
           const SizedBox(height: 10),
         ],
       ),

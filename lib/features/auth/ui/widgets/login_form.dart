@@ -63,6 +63,7 @@ class _LoginFormState extends State<LoginForm> {
           FormButton(
             onPressed: _signin,
             text: 'Sign In',
+            isLoading: false,
           ),
           const SizedBox(
             height: 10,

@@ -5,9 +5,11 @@ class FormButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.text,
+    required this.isLoading,
   });
   final void Function()? onPressed;
   final String text;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +25,15 @@ class FormButton extends StatelessWidget {
           elevation: 5,
           shadowColor: Theme.of(context).primaryColor,
         ),
-        child: Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Colors.white),
-        ),
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Text(
+                text,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.white),
+              ),
       ),
     );
   }
