@@ -4,6 +4,7 @@ import 'package:evento_app/features/auth/ui/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +17,15 @@ class EventoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Evento App',
-      themeMode: ThemeMode.system,
-      theme: AppThemes.lightTheme,
-      darkTheme: AppThemes.darkTheme,
-      home: const SignupScreen(),
+    return ScreenUtilInit(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Evento App',
+        themeMode: ThemeMode.system,
+        theme: AppThemes.lightTheme,
+        darkTheme: AppThemes.darkTheme,
+        home: const SignupScreen(),
+      ),
     );
   }
 }
