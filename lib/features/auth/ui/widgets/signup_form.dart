@@ -31,21 +31,18 @@ class _SignupFormState extends ConsumerState<SignupForm> {
   String? emailInUse;
 
   void _signup(BuildContext context) async {
-    setState(() {
-      _isloading = true;
-    });
     _imageFile = ref.read(imageProvider);
     if (_imageFile == null) {
       showSnackBar('You must upload an image first', context);
-      setState(() {
-        _isloading = false;
-      });
       return;
     }
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isloading = true;
+      });
       _formKey.currentState!.save();
       String error = await AppAuth.registerUser(_email, _password);
-      if (error != '') {
+      if (error.isNotEmpty) {
         // indicates that an error is catched
         setState(() {
           emailInUse = error;

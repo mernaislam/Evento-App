@@ -21,11 +21,11 @@ class _ImageUploadState extends ConsumerState<ImageUpload> {
       source: ImageSource.gallery,
     );
     if (image != null) {
+      var imagePath = image.path;
       setState(() {
-        var imagePath = image.path;
         _pickedImage = File(imagePath);
-        ref.read(imageProvider.notifier).setImage(_pickedImage!);
       });
+      ref.read(imageProvider.notifier).state = _pickedImage;
     }
   }
 
