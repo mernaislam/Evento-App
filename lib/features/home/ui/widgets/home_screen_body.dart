@@ -23,7 +23,7 @@ class HomeScreenBody extends ConsumerWidget {
                 return ListTile(
                   title: Text(event.title),
                   subtitle: Text(
-                      'description: ${event.description} \n city: ${event.city} \n country: ${event.country} \n street: ${event.street} \n maxPrice: ${event.maxPrice} \n minPrice: ${event.minPrice} \n time: ${event.time} \n attendees: ${event.attendees} \n imagesUrl: ${event.imagesUrl} \n longitude: ${event.location.longitude}\n latitude: ${event.location.latitude} \n category: ${event.category.type}'),
+                      'description: ${event.description} \n city: ${event.city} \n country: ${event.country} \n street: ${event.street} \n maxPrice: ${event.maxPrice} \n minPrice: ${event.minPrice} \n time: ${event.startTime} \n attendees: ${event.attendees} \n imagesUrl: ${event.imagesUrl} \n longitude: ${event.location.longitude}\n latitude: ${event.location.latitude} \n category: ${event.category.type}'),
                 );
               },
             ),
