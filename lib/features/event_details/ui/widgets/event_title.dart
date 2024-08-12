@@ -9,7 +9,7 @@ class EventTitle extends StatelessWidget {
   });
   final String title;
   final String categoryName;
-  final List<String> going;
+  final List<dynamic> going;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,11 @@ class EventTitle extends StatelessWidget {
             const SizedBox(
               width: 17,
             ),
-            // TODO: Edit going list based on model data
             Text(
-              '20,000+ going',
+              '${going.length} going',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
+            // TODO: Open to list of going people
             IconButton(
               onPressed: () {},
               icon: const Icon(

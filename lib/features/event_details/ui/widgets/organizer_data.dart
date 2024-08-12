@@ -1,26 +1,30 @@
+import 'package:evento_app/features/auth/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class EventOrganizerData extends StatelessWidget {
-  const EventOrganizerData({super.key});
+  const EventOrganizerData({
+    super.key,
+    required this.oragnizer,
+  });
+  final Account oragnizer;
 
-  // TODO: Recieve organizer argument and replace static data
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
       data: const MediaQueryData(padding: EdgeInsets.zero),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: const SizedBox(
+        leading: SizedBox(
           width: 60,
           child: CircleAvatar(
             radius: 50,
             backgroundImage: NetworkImage(
-              'https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_640.jpg',
+              oragnizer.profileImage,
             ),
           ),
         ),
         title: Text(
-          'World of Music',
+          oragnizer.fullName,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         subtitle: Text(

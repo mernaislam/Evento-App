@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class EventLocation extends StatelessWidget {
-  const EventLocation({super.key});
+  const EventLocation({
+    super.key,
+    required this.location,
+  });
+  final GeoPoint location;
 
   @override
   Widget build(BuildContext context) {
