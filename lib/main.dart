@@ -26,7 +26,7 @@ class EventoApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         theme: AppThemes.lightTheme,
         darkTheme: AppThemes.darkTheme,
-        home: const CreateEventScreen(),
+        home: const SignupScreen(),
       ),
     );
   }

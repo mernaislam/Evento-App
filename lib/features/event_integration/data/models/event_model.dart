@@ -118,7 +118,7 @@ class Event {
         'attendees': attendees,
         'images': imagesUrl,
         'location': location,
-        'category': category,
-        'organizer': organizer,
+        'category': FirebaseFirestore.instance.collection('categories').doc(category.id),
+        'organizer': FirebaseFirestore.instance.collection('users').doc(organizer.id),
       };
 }

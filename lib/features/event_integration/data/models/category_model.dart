@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Category {
-  // final int id;
+  final String id; // Add this line
   final String type;
 
   Category({
-    // required this.id,
+    required this.id, // Add this line
     required this.type,
   });
 
@@ -17,7 +17,7 @@ class Category {
   factory Category.fromFirestore(DocumentSnapshot categoryDoc) {
     final data = categoryDoc.data() as Map<String, dynamic>;
     return Category(
-      // id: data.containsKey('id') ? data['id'] as int? ?? 0 : 0,
+      id: categoryDoc.id, // Add this line
       type: data.containsKey('type')
           ? data['type'] as String? ?? 'unknown category'
           : 'unknown category',
@@ -27,7 +27,7 @@ class Category {
   factory Category.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Category(
-      // id: data.containsKey('id') ? data['id'] as int? ?? 0 : 0,
+      id: doc.id, // Add this line
       type: data.containsKey('type')
           ? data['type'] as String? ?? 'unknown category'
           : 'unknown category',
