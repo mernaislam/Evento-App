@@ -19,9 +19,11 @@ class EventsGridView extends StatelessWidget {
         ),
         itemCount: 10, //change to events.length
         itemBuilder: (context, index) {
-          return const EventCard(
-              isCreator: true,
-              scale: 1); //change to EventCard(event: events[index])
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: MediaQuery.of(context).size.width * 0.45,
+            child: const EventCard(isCreator: true),
+          ); //change to EventCard(event: events[index])
         },
       ),
     );

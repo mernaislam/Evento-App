@@ -6,11 +6,9 @@ class EventCard extends StatefulWidget {
     super.key,
     // required this.event,
     required this.isCreator,
-    required this.scale,
   });
   // final Event event;
   final bool isCreator;
-  final double scale;
 
   @override
   State<EventCard> createState() => _EventCardState();
@@ -40,27 +38,21 @@ class _EventCardState extends State<EventCard> {
         },
         child: Container(
           padding: const EdgeInsets.all(8),
-          width:
-              MediaQuery.of(context).size.width * 0.45 * (widget.scale + 0.2),
-          height:
-              MediaQuery.of(context).size.height * 0.35 * (widget.scale - 0.25),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
           child: Column(
             children: [
-              SizedBox(
-                height: widget.scale == 1
-                    ? MediaQuery.of(context).size.height * 0.2
-                    : MediaQuery.of(context).size.height *
-                        0.2 *
-                        (widget.scale - 0.25),
+              AspectRatio(
+                aspectRatio: 16 / 14,
                 child: Stack(fit: StackFit.expand, children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(imageUrl,
-                        fit: BoxFit.cover), //change to event.ImageUrl
+                    child: Image.network(
+                      imageUrl, // Change to event.imageUrl
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   widget.isCreator
                       ? Positioned(
@@ -77,74 +69,71 @@ class _EventCardState extends State<EventCard> {
                       : const SizedBox(),
                 ]),
               ),
+              // ),
               const SizedBox(),
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title, //change to event.title
-                    style: widget.scale == 1
-                        ? Theme.of(context).textTheme.headlineSmall
-                        : Theme.of(context).textTheme.headlineMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(),
-                  Text(
-                    date, //change to event.date
-                    style: widget.scale == 1
-                        ? Theme.of(context).textTheme.bodySmall
-                        : Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(fontSize: 16),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(),
-                  Row(children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).textTheme.bodySmall!.color,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      title, //change to event.title
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.26 *
-                          widget.scale,
-                      child: Text(
-                        '$street, $city, $country', //change to event.address
-                        style: widget.scale == 1
-                            ? Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(fontSize: 12)
-                            : Theme.of(context).textTheme.titleSmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      date, //change to event.date
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Row(children: [
+                      Icon(
+                        Icons.location_on,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
-                    ),
-                    const SizedBox(),
-                    !widget.isCreator
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isFavorite = !isFavorite;
-                              });
-                            },
-                            child: isFavorite
-                                ? Icon(Icons.favorite,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .color)
-                                : Icon(Icons.favorite_border,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .color))
-                        : const SizedBox(),
-                  ])
+                      const SizedBox(),
+                      Flexible(
+                        flex: 3,
+                        child: Text(
+                          '$street, $city, $country', //change to event.address
+                          style: Theme.of(context).textTheme.titleSmall!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(),
+                      !widget.isCreator
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isFavorite = !isFavorite;
+                                });
+                              },
+                              child: isFavorite
+                                  ? Icon(Icons.favorite,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .color)
+                                  : Icon(Icons.favorite_border,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .color))
+                          : const SizedBox(),
+                    ]),
+                  )
                 ],
               ),
             ],

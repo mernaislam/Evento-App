@@ -17,21 +17,27 @@ class MyEventsScreen extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child:
-                 Text(
+                child: Text(
                   'This Month',
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
                 ),
               ),
               // change this to a list of events happening this month
-              const SingleChildScrollView(
+              SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      EventCard(isCreator: true, scale: 1.45),
-                      EventCard(isCreator: true, scale: 1.45),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.45,
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          child: const EventCard(isCreator: true)),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.45,
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          child: const EventCard(isCreator: true)),
                     ],
                   )),
               DefaultTabController(
@@ -40,7 +46,8 @@ class MyEventsScreen extends StatelessWidget {
                     children: [
                       TabBar(
                         indicatorColor: Theme.of(context).primaryColor,
-                        unselectedLabelColor: Theme.of(context).textTheme.titleSmall!.color,
+                        unselectedLabelColor:
+                            Theme.of(context).textTheme.titleSmall!.color,
                         labelColor: Theme.of(context).primaryColor,
                         tabs: const [
                           Tab(
@@ -58,7 +65,7 @@ class MyEventsScreen extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.7,
                         child: const TabBarView(
                           children: [
-                            EventsGridView(),  //change to EventsGridView(events: events) (upcoming events)
+                            EventsGridView(), //change to EventsGridView(events: events) (upcoming events)
                             EventsGridView(), //change to EventsGridView(events: events) (past events)
                           ],
                         ),
