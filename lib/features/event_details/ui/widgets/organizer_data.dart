@@ -38,10 +38,10 @@ class EventOrganizerData extends StatelessWidget {
           ),
           child: Text(
             'Follow',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
           ),
         ),
       ),
