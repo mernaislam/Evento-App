@@ -24,22 +24,22 @@ class LocationPickerDialogState extends State<LocationPickerDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context,"");
           },
-          child: Text("Cancel"),
+          child: const Text("Cancel"),
         ),
                   ElevatedButton(
             onPressed: () {
               Navigator.pop(context, _locationController.text);
             },
-            child: Text("Confirm Location"),
+            child: const Text("Confirm Location"),
           ),
 
       ],
       title: const Center(child: Text("Select Location")),
       content: Column(
         children: [
-          Container(
+          SizedBox(
             height: 300,
             child: Stack(
               children: [
@@ -52,9 +52,6 @@ class LocationPickerDialogState extends State<LocationPickerDialog> {
                     target: LatLng(30.033333, 31.233334),
                     zoom: 14.4746,
                   ),
-                  // onMapCreated: (controller) {
-                  //   _gmc = controller;
-                  // },
                   onTap: ((argument) async {
                     setState(() {
                       _isLoading = true;
