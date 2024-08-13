@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:evento_app/core/helpers/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -17,20 +19,33 @@ class ImageSlider extends StatefulWidget {
 class _ImageSliderState extends State<ImageSlider> {
   late List<Widget> _items;
   int _currIdx = 0;
-  
+
   @override
   void initState() {
     super.initState();
     _items = widget.images
-        .map((img) => Image.network(
-              img,
+        .map(
+          (img) => CachedNetworkImage(
+            imageUrl: img,
+            placeholder: (context, url) => Image.asset(
+              AppAssets.placeholderImage,
               fit: BoxFit.cover,
               width: double.infinity,
               height: 400,
-            ))
-        .toList();
+            ),
+            errorWidget: (context, url, error) => Image.asset(
+              AppAssets.errorImage,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 400,
+            ),
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 400,
+          ),
+        ).toList();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(

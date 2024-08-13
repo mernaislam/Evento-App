@@ -2,9 +2,8 @@ import 'package:evento_app/core/themes/app_themes.dart';
 import 'package:evento_app/features/auth/ui/screens/signup_screen.dart';
 import 'package:evento_app/features/fcm_notifications/logic/firebase_api.dart';
 import 'package:evento_app/firebase_options.dart';
-// import 'package:evento_app/features/home/ui/screens/home_screen.dart';
-// import 'package:evento_app/features/my_events/ui/screens/my_events_screen.dart';
-import 'package:evento_app/features/create_event/ui/screens/create_event_screen.dart';
+import 'package:evento_app/features/event_details/ui/screens/event_details_screen.dart';
+import 'package:evento_app/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +30,17 @@ class EventoApp extends StatelessWidget {
         theme: AppThemes.lightTheme,
         darkTheme: AppThemes.darkTheme,
         navigatorKey: navigatorKey,
+        initialRoute: '/',
+        onGenerateRoute: (settings) {
+          final  routeName = settings.name?.endsWith(EventDetailsScreen.routeName) ==true? EventDetailsScreen.routeName :settings.name; 
+          switch(routeName){
+            case EventDetailsScreen.routeName:
+              return MaterialPageRoute(builder: (context) => const EventDetailsScreen(),);
+            // TODO: handle unknown routes
+            default: 
+              return MaterialPageRoute(builder: (context) => const HomeScreen(),);
+          }
+        },
         home: const SignupScreen(),
       ),
     );

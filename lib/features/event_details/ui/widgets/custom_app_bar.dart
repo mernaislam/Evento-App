@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share_plus/share_plus.dart';
 
 final ScrollController scrollController = ScrollController();
 
@@ -20,12 +21,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
-      setState(() {
-        _scrollPosition = scrollController.position.pixels;
-        _color = _scrollPosition < 300
-            ? Colors.transparent
-            : Theme.of(context).scaffoldBackgroundColor;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      scrollController.addListener(() {
+        setState(() {
+          _scrollPosition = scrollController.position.pixels;
+          _color = _scrollPosition < 300
+              ? Colors.transparent
+              : Theme.of(context).scaffoldBackgroundColor;
+        });
       });
     });
   }
@@ -45,10 +48,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
         const SizedBox(
           width: 20,
         ),
-        SvgPicture.asset(
-          'assets/icons/share.svg',
-          width: 35,
-          color: Theme.of(context).textTheme.bodyLarge!.color,
+        InkWell(
+          onTap: (){
+            Share.share('https://eventoappdemo.page.link/eventdetails');
+          },
+          child: SvgPicture.asset(
+            'assets/icons/share.svg',
+            width: 35,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
+          ),
         ),
         const SizedBox(
           width: 20,
