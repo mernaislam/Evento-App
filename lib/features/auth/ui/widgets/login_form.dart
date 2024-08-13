@@ -4,6 +4,7 @@ import 'package:evento_app/core/helpers/functions.dart';
 import 'package:evento_app/features/auth/ui/widgets/custom_text_form_field.dart';
 import 'package:evento_app/features/auth/ui/widgets/form_button.dart';
 import 'package:evento_app/features/event_details/ui/screens/event_details_screen.dart';
+import 'package:evento_app/features/create_event/ui/screens/create_event_screen.dart';
 // import 'package:evento_app/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class _LoginFormState extends State<LoginForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const EventDetailsScreen(),
+            builder: (context) => const CreateEventScreen(),
           ),
         );
       }
