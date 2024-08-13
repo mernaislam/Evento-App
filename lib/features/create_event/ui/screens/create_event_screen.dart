@@ -26,7 +26,8 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   final TextEditingController _eventNameController = TextEditingController();
-  final TextEditingController _eventDescriptionController = TextEditingController();
+  final TextEditingController _eventDescriptionController =
+      TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
@@ -34,6 +35,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
   final FocusNode _startDateFocus = FocusNode();
   final FocusNode _endDateFocus = FocusNode();
   final FocusNode _startTimeFocus = FocusNode();
@@ -45,67 +47,105 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   bool _isButtonEnabled = false;
   String? selectedCategory;
   late Category chosenCategory;
-
+  bool _isLoading = false;
 
   CollectionReference events = FirebaseFirestore.instance.collection('events');
-  
+
   Future<void> addEvent() async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        locations[0].latitude, locations[0].longitude);
-  String? chosenImageUrl;
-  if (_chosenImage != null) {
-    chosenImageUrl = await FirebaseManager.uploadImageToFirebase(File(_chosenImage!.path));
-  } else {
-    chosenImageUrl = "";
-  }
-  final Account user = await Account.fetchAccountById(FirebaseAuth.instance.currentUser!.uid);
-  Event event = Event(
-    organizer: user,
-    category: chosenCategory,
-    id: "0",
-    attendees: [],
-    title: _eventNameController.text,
-    description: _eventDescriptionController.text,
- startTime: DateTime.parse("${_startDateController.text} ${_startTimeController.text}"),
-  endTime: DateTime.parse("${_endDateController.text} ${_endTimeController.text}"),
-    location: GeoPoint(locations[0].latitude, locations[0].longitude),
-    imagesUrl: [chosenImageUrl],
-    minPrice: int.tryParse( _minPriceController.text)??0,
-    maxPrice: int.tryParse( _maxPriceController.text)??0,
-    street: placemarks[0].street.toString(),
-    city: placemarks[0].locality.toString(),
-    country: placemarks[0].country.toString(),
-  );
-  // Add event to Firestore and get the document reference
-  DocumentReference eventRef = await events.add(event.toJson());
-
-  // Assuming you have the user's document reference
-  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(user.id);
-
-  // Update the user's document to include the new event reference
-  await userRef.update({
-    'events': FieldValue.arrayUnion([eventRef])
-  });
-
-  // Show success dialog
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Success"),
-        content: const Text("Event Created Successfully"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("OK"),
-          ),
-        ],
+    setState(() {
+      _isLoading = true;
+      print("Loading");
+    });
+    try {
+      print("Adding Event");
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          locations[0].latitude, locations[0].longitude);
+      String? chosenImageUrl;
+      if (_chosenImage != null) {
+        chosenImageUrl = await FirebaseManager.uploadImageToFirebase(
+            File(_chosenImage!.path));
+        print("Image Uploaded");
+      } else {
+        chosenImageUrl = "";
+      }
+      final Account user = await Account.fetchAccountById(
+          FirebaseAuth.instance.currentUser!.uid);
+      print("User Fetched");
+      Event event = Event(
+        organizer: user,
+        category: chosenCategory,
+        id: "0",
+        attendees: [],
+        title: _eventNameController.text,
+        description: _eventDescriptionController.text,
+        startTime: DateFormat("yyyy-MM-dd hh:mm a")
+            .parse("${_startDateController.text} ${_startTimeController.text}"),
+        endTime: DateFormat("yyyy-MM-dd hh:mm a")
+            .parse("${_endDateController.text} ${_endTimeController.text}"),
+        location: GeoPoint(locations[0].latitude, locations[0].longitude),
+        imagesUrl: [chosenImageUrl],
+        minPrice: int.tryParse(_minPriceController.text) ?? 0,
+        maxPrice: int.tryParse(_maxPriceController.text) ?? 0,
+        street: placemarks[0].street.toString(),
+        city: placemarks[0].locality.toString(),
+        country: placemarks[0].country.toString(),
       );
-    },
-  );
-}
+      // Add event to Firestore and get the document reference
+      DocumentReference eventRef = await events.add(event.toJson());
+      print("Event Added");
+
+      // Assuming you have the user's document reference
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('users').doc(user.id);
+
+      // Update the user's document to include the new event reference
+      await userRef.update({
+        'events': FieldValue.arrayUnion([eventRef])
+      });
+
+      print("Added to user");
+      // Show success dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Success"),
+            content: const Text("Event Created Successfully"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print("error");
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Error adding event"),
+              content: Text(e.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   List<Location> locations = [];
   final FocusNode _locationFocus = FocusNode();
@@ -125,24 +165,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _locationController.addListener(_checkIfAllFieldsAreFilled);
     _minPriceController.addListener(_checkIfAllFieldsAreFilled);
     _maxPriceController.addListener(_checkIfAllFieldsAreFilled);
+    _categoryController.addListener(_checkIfAllFieldsAreFilled);
   }
 
   void _checkIfAllFieldsAreFilled() {
     setState(() {
       _isButtonEnabled = _eventNameController.text.isNotEmpty &&
-                         _eventDescriptionController.text.isNotEmpty &&
-                         _startDateController.text.isNotEmpty &&
-                         _endDateController.text.isNotEmpty &&
-                         _startTimeController.text.isNotEmpty &&
-                         _endTimeController.text.isNotEmpty &&
-                         _locationController.text.isNotEmpty &&
-                         _minPriceController.text.isNotEmpty &&
-                         _maxPriceController.text.isNotEmpty;
+          _eventDescriptionController.text.isNotEmpty &&
+          _startDateController.text.isNotEmpty &&
+          _endDateController.text.isNotEmpty &&
+          _startTimeController.text.isNotEmpty &&
+          _endTimeController.text.isNotEmpty &&
+          _locationController.text.isNotEmpty &&
+          _minPriceController.text.isNotEmpty &&
+          _maxPriceController.text.isNotEmpty &&
+          _categoryController.text != "";
     });
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _eventNameController.dispose();
     _eventDescriptionController.dispose();
     _startDateController.dispose();
@@ -152,6 +194,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _locationController.dispose();
     _minPriceController.dispose();
     _maxPriceController.dispose();
+    _categoryController.dispose();
     _startDateFocus.dispose();
     _endDateFocus.dispose();
     _startTimeFocus.dispose();
@@ -205,6 +248,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
+  Widget showLoadingIndicator() {
+    print('el mafroud n load');
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
   Future<void> _selectStartDate(BuildContext context) async {
     pickedStartDate = await showDatePicker(
       context: context,
@@ -245,247 +295,261 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Create an Event",),
+        title: const Text(
+          "Create an Event",
+        ),
         foregroundColor: Theme.of(context).primaryColor,
       ),
-      body: Consumer(
-        builder:(context, ref, child) {
-          final categoryListAsyncValue = ref.watch(categoryListProvider);
+      body: Consumer(builder: (context, ref, child) {
+        final categoryListAsyncValue = ref.watch(categoryListProvider);
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
+            child: Stack(
               children: [
-                const SizedBox(height:100),
-                Stack(
-                  children: [
-                    Container(
-                      child: _chosenImage != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                            child: Image.file(
-                                File(_chosenImage!.path),
-                                fit: BoxFit.contain,
-                                height: 300,
-                                width: double.infinity,
-                              ),
-                          )
-                          : const Icon(
-                              Icons.image,
-                              size: 400,
+                if (!_isLoading)
+                  Column(
+                    children: [
+                      const SizedBox(height: 100),
+                      Stack(
+                        children: [
+                          Container(
+                            child: _chosenImage != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.file(
+                                      File(_chosenImage!.path),
+                                      fit: BoxFit.contain,
+                                      height: 300,
+                                      width: double.infinity,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.image,
+                                    size: 400,
+                                  ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: IconButton(
+                              onPressed: _pickImage,
+                              icon: const Icon(Icons.add_a_photo),
                             ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: IconButton(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.add_a_photo),
+                          ),
+                          if (_chosenImage != null)
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _chosenImage = null;
+                                  });
+                                },
+                                icon: const Icon(Icons.clear),
+                              ),
+                            ),
+                        ],
                       ),
-                    ),
-                    if (_chosenImage != null)
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: IconButton(
-                          onPressed: () {
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                          label: "Event Name",
+                          controller: _eventNameController),
+                      categoryListAsyncValue.when(
+                        data: (categories) => DropdownButton<String>(
+                          value: selectedCategory,
+                          hint: const Text('Select Category'),
+                          items: categories.map((Category category) {
+                            return DropdownMenuItem<String>(
+                              value: category.type,
+                              child: Text(category.type),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
                             setState(() {
-                              _chosenImage = null;
+                              selectedCategory = newValue;
+                              chosenCategory = categories
+                                  .firstWhere((cat) => cat.type == newValue);
+                              _categoryController.text = newValue ?? '';
                             });
                           },
-                          icon: const Icon(Icons.clear),
+                        ),
+                        loading: () => const CircularProgressIndicator(),
+                        error: (error, stackTrace) => Text('Error: $error'),
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                          label: "Event Description",
+                          controller: _eventDescriptionController),
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                        focusNode: _startDateFocus,
+                        label: "Start Date",
+                        controller: _startDateController,
+                        readOnly: true,
+                        onTap: () => _selectStartDate(context),
+                      ),
+                      const SizedBox(height: 10),
+                      Visibility(
+                        visible: _isStartDateSelected,
+                        child: CustomTextField(
+                          focusNode: _endDateFocus,
+                          label: "End Date",
+                          controller: _endDateController,
+                          readOnly: true,
+                          onTap: () => _selectEndDate(context),
                         ),
                       ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(label: "Event Name", controller: _eventNameController),
-            categoryListAsyncValue.when(
-              data: (categories) => DropdownButton<String>(
-                value: selectedCategory,
-                hint: const Text('Select Category'),
-                items: categories.map((Category category) {
-                  return DropdownMenuItem<String>(
-                    value: category.type,
-                    child: Text(category.type),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCategory = newValue;
-                    chosenCategory = categories.firstWhere((cat) => cat.type == newValue);
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                        focusNode: _startTimeFocus,
+                        label: "Start Time",
+                        controller: _startTimeController,
+                        readOnly: true,
+                        onTap: () => _selectStartTime(context),
+                      ),
+                      const SizedBox(height: 10),
+                      Visibility(
+                        visible: _isStartTimeSelected,
+                        child: CustomTextField(
+                          focusNode: _endTimeFocus,
+                          label: "End Time",
+                          controller: _endTimeController,
+                          readOnly: true,
+                          onTap: () => _selectEndTime(context),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        focusNode: _locationFocus,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        decoration: InputDecoration(
+                          labelStyle: Theme.of(context).textTheme.bodyLarge,
+                          hintStyle: Theme.of(context).textTheme.bodyLarge,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          prefixIcon: GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const LocationPickerDialog();
+                                  },
+                                ).then((value) async {
+                                  setState(() {
+                                    _locationController.text = value.toString();
+                                  });
 
-                  });
-                },
-              ),
-              loading: () => const CircularProgressIndicator(),
-              error: (error, stackTrace) => Text('Error: $error'),
-            ),
-                const SizedBox(height: 10),
-                CustomTextField(label: "Event Description", controller: _eventDescriptionController),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  focusNode: _startDateFocus,
-                  label: "Start Date",
-                  controller: _startDateController,
-                  readOnly: true,
-                  onTap: () => _selectStartDate(context),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: _isStartDateSelected,
-                  child: CustomTextField(
-                    focusNode: _endDateFocus,
-                    label: "End Date",
-                    controller: _endDateController,
-                    readOnly: true,
-                    onTap: () => _selectEndDate(context),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  focusNode: _startTimeFocus,
-                  label: "Start Time",
-                  controller: _startTimeController,
-                  readOnly: true,
-                  onTap: () => _selectStartTime(context),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: _isStartTimeSelected,
-                  child: CustomTextField(
-                    focusNode: _endTimeFocus,
-                    label: "End Time",
-                    controller: _endTimeController,
-                    readOnly: true,
-                    onTap: () => _selectEndTime(context),
-                  ),
-                ),
-                const SizedBox(height: 10,),
-                TextField(
-                  focusNode: _locationFocus,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  decoration: InputDecoration(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge,
-                    hintStyle: Theme.of(context).textTheme.bodyLarge,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    prefixIcon: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const LocationPickerDialog();
+                                  try {
+                                    locations = await locationFromAddress(
+                                        _locationController.text);
+                                  } catch (e) {}
+                                  _locationFocus.unfocus();
+                                });
+                              },
+                              child: const Icon(Icons.location_on)),
+                          labelText: "Event Location",
+                          suffixIcon: IconButton(
+                            onPressed: () async {
+                              try {
+                                locations = await locationFromAddress(
+                                    _locationController.text);
+                              } catch (e) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Error",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        content: Text("Invalid Location",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("OK",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor)),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }
                             },
-                          ).then((value) async {
-                            setState(() {
-                              _locationController.text = value.toString();
-                            });
-        
-                            try {
-                              locations = await locationFromAddress(
-                                  _locationController.text);
-                            } catch (e) {}
-                            _locationFocus.unfocus();
-                          });
-                        },
-                        child: const Icon(Icons.location_on)),
-                    labelText: "Event Location",
-                    suffixIcon: IconButton(
-                      onPressed: () async {
-                        try {
-                          locations =
-                              await locationFromAddress(_locationController.text);
-                        } catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("Error", 
-                                  style: TextStyle(color: Theme.of(context).primaryColor)),
-                                  content: Text("Invalid Location", style : Theme.of(context).textTheme.bodyMedium),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("OK", style: TextStyle(color: Theme.of(context).primaryColor)),
-                                    ),
-                                  ],
-                                );
-                              });
-                        }
-                      },
-                      icon: const Icon(Icons.check),
-                    ),
-                  ),
-                  controller: _locationController,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child:  CustomTextField(
-                        controller: _minPriceController,
-                        label: "Minimum Price",
-                        keyboardType: TextInputType.number,
+                            icon: const Icon(Icons.check),
+                          ),
                         ),
-                    ),
-                    const SizedBox(width: 10),
-                Expanded(
-                  child:  CustomTextField(
-                    controller: _maxPriceController,
-                    label: "Maximum Price",
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      
-                      backgroundColor: _isButtonEnabled?Theme.of(context).primaryColor: Colors.grey,
-                    ).copyWith(
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        controller: _locationController,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              controller: _minPriceController,
+                              label: "Minimum Price",
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: CustomTextField(
+                              controller: _maxPriceController,
+                              label: "Maximum Price",
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _isButtonEnabled
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey,
+                          ).copyWith(
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            _isButtonEnabled ? {addEvent()} : null;
+                          },
+                          child: Text("Create Event",
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      _isButtonEnabled?
-                      {
-                        addEvent()
-        
-                      }
-                      : null;
-                  
-                    },
-                    child: Text("Create Event",
-                    style: Theme.of(context).textTheme.bodyLarge
-                    ),
+                    ],
                   ),
-                ),
+                if (_isLoading) showLoadingIndicator(),
               ],
             ),
           ),
         );
-        }
-      ),
-  
+      }),
     );
   }
 }
