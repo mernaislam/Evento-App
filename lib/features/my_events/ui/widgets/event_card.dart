@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:evento_app/features/event_details/ui/screens/event_details_screen.dart';
+import 'package:evento_app/features/event_integration/data/models/event_model.dart';
 
 class EventCard extends StatefulWidget {
   const EventCard({
     super.key,
-    // required this.event,
+    required this.event,
     required this.isCreator,
   });
-  // final Event event;
+  final Event event;
   final bool isCreator;
 
   @override
@@ -15,15 +16,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  // static data till merging
-  String title = 'My Birthday';
-  String street = 'St. 100';
-  String city = 'New York';
-  String country = 'United States';
-  String imageUrl =
-      'https://cdn.pixabay.com/photo/2020/01/15/17/38/fireworks-4768501_640.jpg';
-  String date = 'Mon, Dec 24 . 6.00 PM';
-
   bool isFavorite = false;
 
   @override
@@ -50,7 +42,7 @@ class _EventCardState extends State<EventCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
-                      imageUrl, // Change to event.imageUrl
+                      widget.event.imagesUrl[0],
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -69,16 +61,14 @@ class _EventCardState extends State<EventCard> {
                       : const SizedBox(),
                 ]),
               ),
-              // ),
               const SizedBox(),
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      title, //change to event.title
+                      widget.event.title,
                       style: Theme.of(context).textTheme.headlineSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -88,7 +78,7 @@ class _EventCardState extends State<EventCard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      date, //change to event.date
+                      widget.event.startTime.toString(),
                       style: Theme.of(context).textTheme.bodySmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -106,7 +96,7 @@ class _EventCardState extends State<EventCard> {
                       Flexible(
                         flex: 3,
                         child: Text(
-                          '$street, $city, $country', //change to event.address
+                          '${widget.event.country}, ${widget.event.city}, ${widget.event.street}',
                           style: Theme.of(context).textTheme.titleSmall!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
