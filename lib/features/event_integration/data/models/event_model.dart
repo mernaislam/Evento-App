@@ -113,12 +113,12 @@ class Event {
         'street': street,
         'maxPrice': maxPrice,
         'minPrice': minPrice,
-        'startTime': startTime,
-        'endTime': endTime,
+        'startTime': Timestamp.fromDate(startTime),
+        'endTime': Timestamp.fromDate(endTime),
         'attendees': attendees,
         'images': imagesUrl,
         'location': location,
-        'category': category,
-        'organizer': organizer,
+        'category': FirebaseFirestore.instance.collection('categories').doc(category.id),
+        'organizer': FirebaseFirestore.instance.collection('users').doc(organizer.id),
       };
 }
