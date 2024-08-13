@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:evento_app/features/my_events/ui/widgets/my_events_appbar.dart';
 import 'package:evento_app/features/my_events/ui/widgets/events_gridview.dart';
@@ -34,7 +35,7 @@ class MyEventsScreen extends ConsumerWidget {
                   child: Row(
                     children: events
                         .where((event) =>
-                            event.startTime.month == DateTime.now().month)
+                            event.startTime.month == DateTime.now().month && event.organizer.id == FirebaseAuth.instance.currentUser!.uid)
                         .map((event) => SizedBox(
                             height: MediaQuery.of(context).size.height * 0.45,
                             width: MediaQuery.of(context).size.width * 0.75,
@@ -70,12 +71,12 @@ class MyEventsScreen extends ConsumerWidget {
                             EventsGridView(
                                 events: events
                                     .where((event) =>
-                                        event.startTime.isAfter(DateTime.now()))
+                                        event.startTime.isAfter(DateTime.now()) && event.organizer.id == FirebaseAuth.instance.currentUser!.uid)
                                     .toList()), //(upcoming events)
                             EventsGridView(
                                 events: events
                                     .where((event) => event.startTime
-                                        .isBefore(DateTime.now()))
+                                        .isBefore(DateTime.now()) && event.organizer.id == FirebaseAuth.instance.currentUser!.uid)
                                     .toList()), //(past events)
                           ],
                         ),
