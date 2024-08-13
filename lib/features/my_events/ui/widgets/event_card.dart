@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:evento_app/core/helpers/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:evento_app/features/event_details/ui/screens/event_details_screen.dart';
 import 'package:evento_app/features/event_integration/data/models/event_model.dart';
@@ -25,7 +27,7 @@ class _EventCardState extends State<EventCard> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return EventDetailsScreen(event: widget.event); //change to EventDetailsScreen(event: event)
+            return EventDetailsScreen(event: widget.event);
           }));
         },
         child: Container(
@@ -41,9 +43,19 @@ class _EventCardState extends State<EventCard> {
                 child: Stack(fit: StackFit.expand, children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      widget.event.imagesUrl.isNotEmpty? widget.event.imagesUrl[0]: "https://via.placeholder.com/150",
+                    child: CachedNetworkImage(
+                      imageUrl: widget.event.imagesUrl.isNotEmpty
+                          ? widget.event.imagesUrl[0]
+                          : '',
                       fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        AppAssets.errorImage,
+                        fit: BoxFit.cover,
+                      ),
+                      placeholder: (context, url) => Image.asset(
+                        AppAssets.placeholderImage,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   widget.isCreator
@@ -53,9 +65,7 @@ class _EventCardState extends State<EventCard> {
                           child: IconButton(
                             icon: const Icon(Icons.edit),
                             color: Colors.white,
-                            onPressed: () {
-                              
-                            },
+                            onPressed: () {},
                           ),
                         )
                       : const SizedBox(),

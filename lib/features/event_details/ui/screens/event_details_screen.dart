@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento_app/features/event_details/ui/widgets/bottom_sticky_button.dart';
 import 'package:evento_app/features/event_details/ui/widgets/custom_app_bar.dart';
 import 'package:evento_app/features/event_details/ui/widgets/event_description.dart';
@@ -8,7 +7,6 @@ import 'package:evento_app/features/event_details/ui/widgets/image_slider.dart';
 import 'package:evento_app/features/event_details/ui/widgets/initial_event_details.dart';
 import 'package:evento_app/features/event_details/ui/widgets/organizer_data.dart';
 import 'package:evento_app/features/event_integration/data/models/event_model.dart';
-import 'package:evento_app/features/event_integration/data/repositories/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
