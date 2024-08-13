@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../create_event/ui/screens/create_event_screen.dart';
+
 final ScrollController scrollController = ScrollController();
 
 class MyEventsAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -28,6 +30,12 @@ class _MyEventsAppBarState extends State<MyEventsAppBar> {
         IconButton(
             onPressed: () {
               // navigate to create event screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateEventScreen(),
+                ),
+              );
             },
             icon: Icon(Icons.add,
                 size: 37, color: Theme.of(context).textTheme.bodyLarge!.color)),

@@ -13,17 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EventDetailsScreen extends StatelessWidget {
-  const EventDetailsScreen({super.key});
-
-  Future<Event> getData() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('events')
-        .doc('ZlOjFbVBb3nGLpsdr7aP') // TODO: Pass event id here
-        .get();
-
-    final userData = EventService().fetchEvent(snapshot);
-    return userData;
-  }
+  final Event event;
+  const EventDetailsScreen({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +24,10 @@ class EventDetailsScreen extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           controller: scrollController,
-          child: FutureBuilder(
-            future: getData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Text('No data found');
-              } else {
-                Event event = snapshot.data!;
-                return Column(
+          child: Column(
                   children: [
                     ImageSlider(
-                      images: event.imagesUrl,
+                      images: event.imagesUrl.isNotEmpty? event.imagesUrl: ["https://via.placeholder.com/150"],
                     ),
                     const SizedBox(height: 10),
                     Padding(
@@ -99,10 +79,7 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                     )
                   ],
-                );
-              }
-            },
-          ),
+                )
         ),
       ),
       bottomNavigationBar: const BottomStickyButton(),

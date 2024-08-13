@@ -6,9 +6,20 @@ import 'package:evento_app/features/event_integration/data/models/event_model.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:evento_app/features/auth/data/model/user_model.dart';
 
-class MyEventsScreen extends StatelessWidget {
+class MyEventsScreen extends StatefulWidget {
   const MyEventsScreen({super.key});
 
+  @override
+  State<MyEventsScreen> createState() => _MyEventsScreenState();
+}
+
+class _MyEventsScreenState extends State<MyEventsScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUserEvents();
+  }
+  
   Future<List<Event>> getUserEvents() async {
     final Account user =
         await Account.fetchAccountById(FirebaseAuth.instance.currentUser!.uid);

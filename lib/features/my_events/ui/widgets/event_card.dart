@@ -25,7 +25,7 @@ class _EventCardState extends State<EventCard> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const EventDetailsScreen(); //change to EventDetailsScreen(event: event)
+            return EventDetailsScreen(event: widget.event); //change to EventDetailsScreen(event: event)
           }));
         },
         child: Container(
@@ -42,7 +42,7 @@ class _EventCardState extends State<EventCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
-                      widget.event.imagesUrl[0],
+                      widget.event.imagesUrl.isNotEmpty? widget.event.imagesUrl[0]: "https://via.placeholder.com/150",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -54,7 +54,7 @@ class _EventCardState extends State<EventCard> {
                             icon: const Icon(Icons.edit),
                             color: Colors.white,
                             onPressed: () {
-                              // navigate to edit event screen
+                              
                             },
                           ),
                         )
