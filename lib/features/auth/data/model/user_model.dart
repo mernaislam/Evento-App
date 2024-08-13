@@ -22,6 +22,25 @@ class Account {
     return Account.fromFirestore(accountDoc);
   }
 
+  static Future<Account> fetchAccountById(String id) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  QuerySnapshot querySnapshot = await users.where('id', isEqualTo: id).get();
+  if (querySnapshot.docs.isNotEmpty) {
+    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+    return Account.fromFirestore(documentSnapshot);
+  } else {
+    return const Account(
+      id: 'no id',
+      fullName: 'no name',
+      email: 'no email',
+      profileImage: 'no profileImage',
+      events: [],
+      favorites: [],
+    );
+  }
+}
+
+
   factory Account.fromFirestore(DocumentSnapshot accountDoc) {
     final data = accountDoc.data() as Map<String, dynamic>;
     return Account(
