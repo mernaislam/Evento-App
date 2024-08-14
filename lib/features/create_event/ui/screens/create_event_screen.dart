@@ -47,15 +47,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   bool _isButtonEnabled = false;
   String? selectedCategory;
   late Category chosenCategory;
-  bool _isLoading = false;
 
   CollectionReference events = FirebaseFirestore.instance.collection('events');
 
   Future<void> addEvent() async {
-    setState(() {
-      _isLoading = true;
-      print("Loading");
-    });
     try {
       print("Adding Event");
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -115,6 +110,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: const Text("OK"),
               ),
@@ -140,10 +136,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               ],
             );
           });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -308,243 +300,237 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Stack(
+            child: Column(
               children: [
-                if (!_isLoading)
-                  Column(
-                    children: [
-                      const SizedBox(height: 100),
-                      Stack(
-                        children: [
-                          Container(
-                            child: _chosenImage != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.file(
-                                      File(_chosenImage!.path),
-                                      fit: BoxFit.contain,
-                                      height: 300,
-                                      width: double.infinity,
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.image,
-                                    size: 400,
-                                  ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: IconButton(
-                              onPressed: _pickImage,
-                              icon: const Icon(Icons.add_a_photo),
-                            ),
-                          ),
-                          if (_chosenImage != null)
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _chosenImage = null;
-                                  });
-                                },
-                                icon: const Icon(Icons.clear),
+                const SizedBox(height: 100),
+                Stack(
+                  children: [
+                    Container(
+                      child: _chosenImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.file(
+                                File(_chosenImage!.path),
+                                fit: BoxFit.contain,
+                                height: 300,
+                                width: double.infinity,
                               ),
+                            )
+                          : const Icon(
+                              Icons.image,
+                              size: 400,
                             ),
-                        ],
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: IconButton(
+                        onPressed: _pickImage,
+                        icon: const Icon(Icons.add_a_photo),
                       ),
-                      const SizedBox(height: 10),
-                      CustomTextField(
-                          label: "Event Name",
-                          controller: _eventNameController),
-                      categoryListAsyncValue.when(
-                        data: (categories) => DropdownButton<String>(
-                          value: selectedCategory,
-                          hint: const Text('Select Category'),
-                          items: categories.map((Category category) {
-                            return DropdownMenuItem<String>(
-                              value: category.type,
-                              child: Text(category.type),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
+                    ),
+                    if (_chosenImage != null)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: IconButton(
+                          onPressed: () {
                             setState(() {
-                              selectedCategory = newValue;
-                              chosenCategory = categories
-                                  .firstWhere((cat) => cat.type == newValue);
-                              _categoryController.text = newValue ?? '';
+                              _chosenImage = null;
                             });
                           },
-                        ),
-                        loading: () => const CircularProgressIndicator(),
-                        error: (error, stackTrace) => Text('Error: $error'),
-                      ),
-                      const SizedBox(height: 10),
-                      CustomTextField(
-                          label: "Event Description",
-                          controller: _eventDescriptionController),
-                      const SizedBox(height: 10),
-                      CustomTextField(
-                        focusNode: _startDateFocus,
-                        label: "Start Date",
-                        controller: _startDateController,
-                        readOnly: true,
-                        onTap: () => _selectStartDate(context),
-                      ),
-                      const SizedBox(height: 10),
-                      Visibility(
-                        visible: _isStartDateSelected,
-                        child: CustomTextField(
-                          focusNode: _endDateFocus,
-                          label: "End Date",
-                          controller: _endDateController,
-                          readOnly: true,
-                          onTap: () => _selectEndDate(context),
+                          icon: const Icon(Icons.clear),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      CustomTextField(
-                        focusNode: _startTimeFocus,
-                        label: "Start Time",
-                        controller: _startTimeController,
-                        readOnly: true,
-                        onTap: () => _selectStartTime(context),
-                      ),
-                      const SizedBox(height: 10),
-                      Visibility(
-                        visible: _isStartTimeSelected,
-                        child: CustomTextField(
-                          focusNode: _endTimeFocus,
-                          label: "End Time",
-                          controller: _endTimeController,
-                          readOnly: true,
-                          onTap: () => _selectEndTime(context),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        focusNode: _locationFocus,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        decoration: InputDecoration(
-                          labelStyle: Theme.of(context).textTheme.bodyLarge,
-                          hintStyle: Theme.of(context).textTheme.bodyLarge,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          prefixIcon: GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const LocationPickerDialog();
-                                  },
-                                ).then((value) async {
-                                  setState(() {
-                                    _locationController.text = value.toString();
-                                  });
-
-                                  try {
-                                    locations = await locationFromAddress(
-                                        _locationController.text);
-                                  } catch (e) {}
-                                  _locationFocus.unfocus();
-                                });
-                              },
-                              child: const Icon(Icons.location_on)),
-                          labelText: "Event Location",
-                          suffixIcon: IconButton(
-                            onPressed: () async {
-                              try {
-                                locations = await locationFromAddress(
-                                    _locationController.text);
-                              } catch (e) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text("Error",
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
-                                        content: Text("Invalid Location",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("OK",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor)),
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              }
-                            },
-                            icon: const Icon(Icons.check),
-                          ),
-                        ),
-                        controller: _locationController,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomTextField(
-                              controller: _minPriceController,
-                              label: "Minimum Price",
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: CustomTextField(
-                              controller: _maxPriceController,
-                              label: "Maximum Price",
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _isButtonEnabled
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey,
-                          ).copyWith(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            _isButtonEnabled ? {addEvent()} : null;
-                          },
-                          child: Text("Create Event",
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ),
-                      ),
-                    ],
+                  ],
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                    label: "Event Name",
+                    controller: _eventNameController),
+                categoryListAsyncValue.when(
+                  data: (categories) => DropdownButton<String>(
+                    value: selectedCategory,
+                    hint: const Text('Select Category'),
+                    items: categories.map((Category category) {
+                      return DropdownMenuItem<String>(
+                        value: category.type,
+                        child: Text(category.type),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedCategory = newValue;
+                        chosenCategory = categories
+                            .firstWhere((cat) => cat.type == newValue);
+                        _categoryController.text = newValue ?? '';
+                      });
+                    },
                   ),
-                if (_isLoading) showLoadingIndicator(),
+                  loading: () => const CircularProgressIndicator(),
+                  error: (error, stackTrace) => Text('Error: $error'),
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                    label: "Event Description",
+                    controller: _eventDescriptionController),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  focusNode: _startDateFocus,
+                  label: "Start Date",
+                  controller: _startDateController,
+                  readOnly: true,
+                  onTap: () => _selectStartDate(context),
+                ),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: _isStartDateSelected,
+                  child: CustomTextField(
+                    focusNode: _endDateFocus,
+                    label: "End Date",
+                    controller: _endDateController,
+                    readOnly: true,
+                    onTap: () => _selectEndDate(context),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  focusNode: _startTimeFocus,
+                  label: "Start Time",
+                  controller: _startTimeController,
+                  readOnly: true,
+                  onTap: () => _selectStartTime(context),
+                ),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: _isStartTimeSelected,
+                  child: CustomTextField(
+                    focusNode: _endTimeFocus,
+                    label: "End Time",
+                    controller: _endTimeController,
+                    readOnly: true,
+                    onTap: () => _selectEndTime(context),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  focusNode: _locationFocus,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  decoration: InputDecoration(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge,
+                    hintStyle: Theme.of(context).textTheme.bodyLarge,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    prefixIcon: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const LocationPickerDialog();
+                            },
+                          ).then((value) async {
+                            setState(() {
+                              _locationController.text = value.toString();
+                            });
+            
+                            try {
+                              locations = await locationFromAddress(
+                                  _locationController.text);
+                            } catch (e) {}
+                            _locationFocus.unfocus();
+                          });
+                        },
+                        child: const Icon(Icons.location_on)),
+                    labelText: "Event Location",
+                    suffixIcon: IconButton(
+                      onPressed: () async {
+                        try {
+                          locations = await locationFromAddress(
+                              _locationController.text);
+                        } catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Error",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColor)),
+                                  content: Text("Invalid Location",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      icon: const Icon(Icons.check),
+                    ),
+                  ),
+                  controller: _locationController,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        controller: _minPriceController,
+                        label: "Minimum Price",
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: CustomTextField(
+                        controller: _maxPriceController,
+                        label: "Maximum Price",
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isButtonEnabled
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey,
+                    ).copyWith(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      _isButtonEnabled ? {addEvent()} : null;
+                    },
+                    child: Text("Create Event",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
+                ),
               ],
             ),
           ),
